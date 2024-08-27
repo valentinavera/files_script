@@ -31,7 +31,8 @@ copy_and_rename_pdfs() {
     local indexed_name
     local dir
     local new_dir
-    local file_count=1
+    local file_count
+    local last_dir=""
 
     find "$PDF_DIR" -type f -name '*.pdf' | while read -r pdf_file; do
         dir=$(dirname "$pdf_file")
@@ -39,6 +40,12 @@ copy_and_rename_pdfs() {
         # Skip processing if the directory is NEW_FOLDER
         if [[ "$dir" == "$NEW_FOLDER" || "$dir" == "$NEW_FOLDER"/* ]]; then
             continue
+        fi
+
+        # Reset file_count if we're in a new directory
+        if [[ "$dir" != "$last_dir" ]]; then
+            file_count=1
+            last_dir="$dir"
         fi
 
         base_name=$(basename "$pdf_file" .pdf)
