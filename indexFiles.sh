@@ -10,12 +10,16 @@ index_folder() {
     local rest
     local cleaned_name
 
-    # Remove the first two characters from the input
-    rest=$(printf '%s' "$input" | sed -E 's/^[0-9]{2}//')
+    # Extract the first two characters (assuming they are numbers)
+    local prefix
+    prefix=$(printf '%s' "$base_name" | grep -oE '^[0-9]{2}')
+    
+    # Remove the first two characters from the base_name
+    rest=$(printf '%s' "$base_name" | sed -E 's/^[0-9]{2}//')
 
     # Remove numbers, commas, dots, hyphens, underscores
     cleaned_name=$(printf '%s' "$rest" | tr -d '[:digit:],._-')
-    
+
     # Prepend the index, formatted as 3 digits (e.g., 001, 002)
     printf '%03d%s' "$index" "$cleaned_name"
 }
